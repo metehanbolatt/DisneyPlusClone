@@ -10,7 +10,7 @@ import com.metehanbolat.disneyplusclone.ui.splash_screen.SplashScreen
 @Composable
 fun LoginNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = WelcomePage.SplashScreen.route) {
+    NavHost(navController = navController, startDestination = WelcomePage.LoginScreen.route) {
         composable(route = WelcomePage.SplashScreen.route) {
             SplashScreen(navController = navController)
         }

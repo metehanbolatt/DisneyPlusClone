@@ -9,3 +9,4 @@ val Teal200 = Color(0xFF03DAC5)
 
 val DarkBlue = Color(0xFF060222)
 val LightBlue = Color(0xFF23479F)
+val SignInButtonColor = Color(0xFF0072D2)
