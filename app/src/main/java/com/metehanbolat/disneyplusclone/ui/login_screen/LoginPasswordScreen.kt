@@ -3,7 +3,6 @@ package com.metehanbolat.disneyplusclone.ui.login_screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,14 +12,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +37,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,22 +47,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.metehanbolat.disneyplusclone.R
-import com.metehanbolat.disneyplusclone.ui.navigation.login.WelcomePage
 import com.metehanbolat.disneyplusclone.ui.theme.CursorColor
 import com.metehanbolat.disneyplusclone.ui.theme.InputBackgroundColor
 import com.metehanbolat.disneyplusclone.ui.theme.InputFieldIndicatorColor
 import com.metehanbolat.disneyplusclone.ui.theme.InputFieldLabelColor
+import com.metehanbolat.disneyplusclone.ui.theme.RememberPasswordTextColor
 import com.metehanbolat.disneyplusclone.ui.theme.SignInButtonColor
-import com.metehanbolat.disneyplusclone.ui.theme.SignUpTextColor
 
 @Composable
-fun LoginWithEmailScreen(
+fun LoginPasswordScreen(
     navController: NavHostController
 ) {
-    var email by remember { mutableStateOf("") }
+
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = Color.Transparent)
 
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -97,11 +104,11 @@ fun LoginWithEmailScreen(
             Spacer(modifier = Modifier.height(20.dp))
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
+                value = password,
+                onValueChange = { password = it },
                 label = {
                     Text(
-                        text = "E-posta adresi"
+                        text = "Parola"
                     )
                 },
                 colors = TextFieldDefaults.textFieldColors(
@@ -112,7 +119,21 @@ fun LoginWithEmailScreen(
                     unfocusedLabelColor = InputFieldLabelColor,
                     focusedIndicatorColor = InputFieldIndicatorColor
                 ),
-                maxLines = 1
+                maxLines = 1,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    val image =
+                        if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val description = if (passwordVisible) "Hide Password" else "Show Password"
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = image,
+                            contentDescription = description,
+                            tint = InputFieldLabelColor
+                        )
+                    }
+                }
             )
             Spacer(modifier = Modifier.height(25.dp))
             Button(
@@ -123,31 +144,20 @@ fun LoginWithEmailScreen(
                     backgroundColor = SignInButtonColor
                 ),
                 onClick = {
-                    navController.navigate(WelcomePage.LoginPasswordScreen.route)
+
                 }
             ) {
                 Text(
-                    text = "DEVAM ET",
+                    text = "OTURUM AÇ",
                     color = Color.White
                 )
             }
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "Disney+'ta yeni misiniz?",
-                color = InputFieldLabelColor,
-                fontFamily = FontFamily(Font(R.font.avenir_roman))
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    println("Tıkladı")
-                },
-                text = "KAYDOLUN",
-                color = SignUpTextColor,
-                fontFamily = FontFamily(Font(R.font.avenir_heavy))
+                text = "Parolanızı mı Unuttunuz?",
+                fontFamily = FontFamily(Font(R.font.avenir_roman)),
+                fontSize = 16.sp,
+                color = RememberPasswordTextColor
             )
         }
     }
@@ -155,7 +165,7 @@ fun LoginWithEmailScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginWithEmailScreenPreview() {
+fun LoginPasswordScreenPreview() {
     val navController = rememberNavController()
-    LoginWithEmailScreen(navController = navController)
+    LoginPasswordScreen(navController = navController)
 }
